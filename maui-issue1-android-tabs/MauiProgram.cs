@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using maui_issue1_android_tabs.ViewModels;
+using Microsoft.Extensions.Logging;
 
 namespace maui_issue1_android_tabs;
 
@@ -19,7 +20,10 @@ public static class MauiProgram
 		builder.Logging.AddDebug();
 #endif
 
-		return builder.Build();
+		builder.Services.AddTransient<MainViewModel>();
+        builder.Services.AddTransient<MainPage>();
+
+        return builder.Build();
 	}
 }
 

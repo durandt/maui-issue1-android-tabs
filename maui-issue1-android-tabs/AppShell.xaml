@@ -3,13 +3,18 @@
     x:Class="maui_issue1_android_tabs.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:maui_issue1_android_tabs"
+    xmlns:views="clr-namespace:maui_issue1_android_tabs"
     Shell.FlyoutBehavior="Disabled">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <TabBar>
+       <Tab Title="Home" Icon="house">
+           <ShellContent Title="Home" ContentTemplate="{DataTemplate views:MainPage}" />
+       </Tab>
+       <Tab Title="Other" Icon="information">
+           <ShellContent Title="Other 1" ContentTemplate="{DataTemplate views:MainPage}" />
+           <ShellContent Title="Other 2" ContentTemplate="{DataTemplate views:MainPage}" />
+       </Tab>
+    </TabBar>
 
 </Shell>
 

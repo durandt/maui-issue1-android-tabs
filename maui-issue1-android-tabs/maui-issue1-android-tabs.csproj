@@ -50,6 +50,16 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Remove="ViewModels\" />
+	  <None Remove="ViewModels\Base\" />
+	  <None Remove="CommunityToolkit.Mvvm" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="ViewModels\" />
+	  <Folder Include="ViewModels\Base\" />
+	</ItemGroup>
 </Project>

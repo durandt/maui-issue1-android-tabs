@@ -1,25 +1,56 @@
-﻿namespace maui_issue1_android_tabs;
+﻿using System.ComponentModel;
+using maui_issue1_android_tabs.ViewModels;
+
+namespace maui_issue1_android_tabs;
 
 public partial class MainPage : ContentPage
 {
-	int count = 0;
+    private MainViewModel MainViewModel { get; }
 
-	public MainPage()
+	public MainPage(MainViewModel mainViewModel)
 	{
 		InitializeComponent();
-	}
+		BindingContext = mainViewModel;
+        MainViewModel = mainViewModel;
+    }
 
-	private void OnCounterClicked(object sender, EventArgs e)
-	{
-		count++;
+    protected override async void OnAppearing()
+    {
+        if (BindingContext is MainViewModel mainViewModel)
+        {
+            mainViewModel.OnAppearingCalledCount++;
+        }
 
-		if (count == 1)
-			CounterBtn.Text = $"Clicked {count} time";
-		else
-			CounterBtn.Text = $"Clicked {count} times";
+        if (BindingContext is ViewModels.Base.IViewModel { IsInitialized: false } viewModel)
+        {
+            viewModel.IsInitialized = true;
+            await viewModel.InitializeAsync();
+        }
+    }
 
-		SemanticScreenReader.Announce(CounterBtn.Text);
-	}
+    private async void RefreshButton_OnClicked(object sender, EventArgs e)
+    {
+        MainViewModel.IsInitialized = true;
+        await MainViewModel.InitializeAsync();
+    }
+
+    private void AddResultButton_OnClicked(object sender, EventArgs e)
+    {
+        MainViewModel.AddItem();
+    }
+
+    private void InvalidateMeasureButton_OnClicked(object sender, EventArgs e)
+    {
+        InvalidateMeasure();
+    }
+
+    private void VerticalStackLayout_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == HeightProperty.PropertyName)
+        {
+            (_ScrollView as IView)?.InvalidateMeasure();
+        }
+    }
 }
 
 

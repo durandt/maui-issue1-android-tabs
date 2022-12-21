@@ -1,41 +1,40 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vms="clr-namespace:maui_issue1_android_tabs.ViewModels"
+             x:DataType="vms:MainViewModel"
              x:Class="maui_issue1_android_tabs.MainPage">
 
-    <ScrollView>
-        <VerticalStackLayout
-            Spacing="25"
-            Padding="30,0"
-            VerticalOptions="Center">
+    <ScrollView Margin="{OnPlatform Android='0', iOS='0,36,0,0'}" x:Name="_ScrollView">
+        <StackLayout Padding="16" Spacing="16">
+            <StackLayout>
+                <Label FontSize="Large" FontAttributes="Bold" Text="Debug" />
+                <Label FontSize="Small" Text="{Binding Guid}" />
+                <Label FontSize="Small" Text="{Binding OnAppearingCalledCountLabel}" />
+                <Label FontSize="Small" Text="{Binding InitializationStatusLabel}" />
+                <Label FontSize="Small" Text="{Binding ItemsCountLabel}" />
+            </StackLayout>
+            <StackLayout>
+                <Label FontSize="Large" FontAttributes="Bold" Text="Results" />
+                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+            </StackLayout>
 
-            <Image
-                Source="dotnet_bot.png"
-                SemanticProperties.Description="Cute dot net bot waving hi to you!"
-                HeightRequest="200"
-                HorizontalOptions="Center" />
+            <StackLayout Spacing="4" Orientation="Horizontal">
+                <Button Text="Refresh" Clicked="RefreshButton_OnClicked"/>
+                <Button Text="Add result" Clicked="AddResultButton_OnClicked" />
+                <Button Text="InvalidateMeasure" Clicked="InvalidateMeasureButton_OnClicked" />
+            </StackLayout>
 
-            <Label
-                Text="Hello, World!"
-                SemanticProperties.HeadingLevel="Level1"
-                FontSize="32"
-                HorizontalOptions="Center" />
-
-            <Label
-                Text="Welcome to .NET Multi-platform App UI"
-                SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I"
-                FontSize="18"
-                HorizontalOptions="Center" />
-
-            <Button
-                x:Name="CounterBtn"
-                Text="Click me"
-                SemanticProperties.Hint="Counts the number of times you click"
-                Clicked="OnCounterClicked"
-                HorizontalOptions="Center" />
-
-        </VerticalStackLayout>
+            <StackLayout BindableLayout.ItemsSource="{Binding Items}"
+                         PropertyChanged="VerticalStackLayout_PropertyChanged"
+                         Orientation="Vertical">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <Label Text="{Binding}" />
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </StackLayout>
+        </StackLayout>
     </ScrollView>
 
 </ContentPage>
