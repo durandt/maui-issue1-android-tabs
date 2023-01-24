@@ -8,7 +8,8 @@
 
     <TabBar>
        <Tab Title="Home" Icon="house">
-           <ShellContent Title="Home" ContentTemplate="{DataTemplate views:MainPage}" />
+           <ShellContent Title="Home 1" ContentTemplate="{DataTemplate views:MainPage}" />
+           <ShellContent Title="Home 2" ContentTemplate="{DataTemplate views:MainPage}" />
        </Tab>
        <Tab Title="Other" Icon="information">
            <ShellContent Title="Other 1" ContentTemplate="{DataTemplate views:MainPage}" />
