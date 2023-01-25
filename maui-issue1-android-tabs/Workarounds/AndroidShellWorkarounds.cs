@@ -42,14 +42,13 @@ public static partial class HostExtensions
 
         protected override IShellToolbarTracker CreateTrackerForToolbar(AndroidX.AppCompat.Widget.Toolbar toolbar)
         {
-            return new ShellToolbarTrackerrWorkaround(this, toolbar, ((IShellContext)this).CurrentDrawerLayout);
+            return new ShellToolbarTrackerWorkaround(this, toolbar, ((IShellContext)this).CurrentDrawerLayout);
         }
 
         protected override IShellItemRenderer CreateShellItemRenderer(ShellItem shellItem)
         {
             return new ShellItemRendererWorkaround(this);
         }
-
 
         class ShellItemRendererWorkaround : ShellItemRenderer
         {
@@ -130,31 +129,19 @@ public static partial class HostExtensions
             }
         }
 
-        class ShellToolbarTrackerrWorkaround : ShellToolbarTracker
+        class ShellToolbarTrackerWorkaround : ShellToolbarTracker
         {
             DrawerLayout _drawerLayout;
 
-            public ShellToolbarTrackerrWorkaround(
+            public static ShellToolbarTrackerWorkaround Current { get; set; }
+
+            public ShellToolbarTrackerWorkaround(
                 IShellContext shellContext,
                 AndroidX.AppCompat.Widget.Toolbar toolbar,
                 DrawerLayout drawerLayout) : base(shellContext, toolbar, drawerLayout)
             {
+                Current = this;
                 _drawerLayout = drawerLayout;
-                _drawerLayout.ViewAttachedToWindow += DrawerLayoutAttached;
-            }
-
-            void DrawerLayoutAttached(object sender, Android.Views.View.ViewAttachedToWindowEventArgs e)
-            {
-                _drawerLayout.ViewAttachedToWindow -= DrawerLayoutAttached;
-                var rootView = _drawerLayout.GetChildrenOfType<CoordinatorLayout>().FirstOrDefault();
-                var fragment =
- (ShellSectionRendererWorkaround)AndroidX.Fragment.App.FragmentManager.FindFragment(rootView);
-                fragment.ToolbarTracker = this;
-            }
-
-            protected override void OnPageChanged(Page oldPage, Page newPage)
-            {
-                base.OnPageChanged(oldPage, newPage);
             }
         }
 
@@ -162,7 +149,7 @@ public static partial class HostExtensions
         {
             bool _selecting;
             readonly IShellContext _shellContext;
-            public ShellToolbarTrackerrWorkaround ToolbarTracker { get; set; }
+            public ShellToolbarTrackerWorkaround ToolbarTracker { get; set; }
             ViewPager2 _viewPager;
             IShellSectionController SectionController => (IShellSectionController)ShellSection;
             IShellController ShellController => _shellContext.Shell;
@@ -175,6 +162,8 @@ public static partial class HostExtensions
             public override Android.Views.View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
             {
                 var view = base.OnCreateView(inflater, container, savedInstanceState);
+                ToolbarTracker = ShellToolbarTrackerWorkaround.Current;
+                ShellToolbarTrackerWorkaround.Current = null;
                 _viewPager = (view as ViewGroup).GetChildrenOfType<ViewPager2>().FirstOrDefault();
                 return view;
             }
